@@ -1,0 +1,255 @@
+.container-fluid {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+.register-table {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.register-table th {
+  border: 1px solid #dee2e6 !important;
+  vertical-align: middle !important;
+  text-align: center;
+  padding: 6px 8px;
+}
+
+.register-table td {
+  border: 1px solid #dee2e6 !important;
+  vertical-align: middle !important;
+  text-align: center;
+  padding: 6px 8px;
+  width: calc(100% / 6);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.top-header th {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+}
+
+.top-header input {
+  border-radius: 4px;
+}
+
+.no-right-border {
+  border-right: none !important;
+}
+
+.no-border {
+  border: none !important;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 4px 12px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.register-table input {
+  width: 100%;
+  padding: 4px 6px;
+  font-size: 0.9rem;
+}
+
+input:required {
+  border: 1px solid #ced4da;
+}
+
+input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+.register-table-1 {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  width: 100%;
+  table-layout: fixed;
+  font-size: 0.85rem;
+}
+
+.register-table-1 th,
+.register-table-1 td {
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+  text-align: center;
+  padding: 4px 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.register-table-1 th {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 500;
+}
+
+.supplier-wrapper {
+  position: relative;
+  width: 260px;
+}
+
+.d-flex span {
+  font-size: 15px;
+  font-weight: 600;
+  color: #020508;
+}
+
+.supplier-wrapper .input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.supplier-wrapper .form-control {
+  height: 36px;
+  border: 1px solid #cfd6dd;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  padding: 6px 10px;
+  font-size: 13px;
+  background: #fff;
+}
+
+.supplier-wrapper .btn {
+  height: 36px;
+  border: 1px solid #cfd6dd;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  background: #f8f9fa;
+  padding: 0 10px;
+}
+
+.supplier-wrapper .btn:hover {
+  background: #e9ecef;
+  color: #2c3e50;
+}
+
+.supplier-wrapper .input-group:focus-within .form-control {
+  border-color: #0d6efd;
+}
+
+.supplier-wrapper .input-group:focus-within .btn {
+  border-color: #0d6efd;
+}
+
+.supplier-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 2px;
+  border: 1px solid #cfd6dd;
+  border-radius: 4px;
+  background: #fff;
+  max-height: 150px;
+  overflow-y: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  z-index: 9999;
+}
+
+.supplier-dropdown .list-group-item {
+  font-size: 13px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: 0.15s;
+  border: none;
+}
+
+.supplier-dropdown .list-group-item:hover {
+  background: #0d6efd;
+  color: #fff;
+}
+
+.btn-primary.btn-sm {
+  height: 36px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.d-flex.flex-wrap {
+  gap: 10px;
+}
+
+/* NORMAL TABLE */
+#print-section {
+  font-size: 17px;
+}
+
+/* PDF MODE */
+.pdf-mode {
+  font-size: 15px !important;
+  padding: 10px !important;
+}
+
+/* TABLE */
+.pdf-mode table {
+  font-size: 18px !important;
+  width: 100% !important;
+}
+
+/* TABLE HEADER + TD */
+.pdf-mode th,
+.pdf-mode td {
+  padding: 6px 8px !important;
+  font-size: 17px !important;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* SECOND TABLE */
+.pdf-mode .register-table-1 th,
+.pdf-mode .register-table-1 td {
+  font-size: 18px !important;
+  padding: 5px 7px !important;
+}
+
+/* TABLE SPACING */
+.pdf-mode .table {
+  margin-bottom: 8px !important;
+  margin-top: 12px !important;
+}
+
+/* HEADER STYLE */
+.pdf-mode .top-header th,
+.pdf-mode .register-table-1 th {
+  font-weight: 700;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+
+  .supplier-wrapper {
+    width: 100%;
+  }
+
+  .d-flex {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+}

@@ -1,0 +1,163 @@
+<div class="container mt-4 mb-4">
+  <div class="card shadow form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" appEnterTab>
+      <div class="custom-header d-flex justify-content-between align-items-center">
+        <span>இதர அக்கவுண்ட்</span>
+
+        <!-- <button type="button" class="btn btn-light btn-sm" [disabled]="form.invalid">
+          <i class="bi bi-pencil-square"></i> திருத்து
+        </button> -->
+      </div>
+
+      <div class="card-body">
+        <div class="section-title">தனிநபர் விபரம்:</div>
+
+        <div class="row mb-3">
+          <div class="col-md-2"><label>பெயர்:</label></div>
+          <div class="col-md-4">
+            <input class="form-control" formControlName="personName" />
+          </div>
+
+          <div class="col-md-2"><label>தெரு :</label></div>
+          <div class="col-md-4">
+            <input class="form-control" formControlName="address" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-2">
+            <label>சப்ளையர்:</label>
+          </div>
+
+          <div class="col-md-4 position-relative">
+            <div class="input-group">
+
+              <!-- INPUT -->
+              <input type="text" class="form-control" formControlName="supplier" (focus)="showDropdown = true"
+                (input)="filterSuppliers()" />
+
+              <!-- DROPDOWN BUTTON -->
+              <button class="btn btn-outline-secondary" type="button" (click)="showDropdown = !showDropdown">
+                <i class="bi bi-caret-down-fill"></i>
+              </button>
+
+            </div>
+
+            <!-- DROPDOWN LIST -->
+            <ul *ngIf="showDropdown && filteredSuppliers.length" class="list-group position-absolute w-100"
+              style="z-index:1000; max-height:150px; overflow-y:auto;">
+
+              <li class="list-group-item list-group-item-action" *ngFor="let s of filteredSuppliers"
+                (click)="selectSupplier(s)">
+                {{ s }}
+              </li>
+
+            </ul>
+          </div>
+
+          <div class="col-md-2"><label>மொபைல்:</label></div>
+          <div class="col-md-4">
+            <input class="form-control" formControlName="phone" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-2"><label>ஊர்:</label></div>
+          <div class="col-md-4">
+            <input class="form-control" formControlName="pCity" />
+          </div>
+
+          <div class="col-md-2"><label>மாநிலம்:</label></div>
+          <div class="col-md-4">
+            <input class="form-control" formControlName="state" />
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="section-title">பேங்க் விபரம்:</div>
+
+        <div class="row mb-3">
+          <div class="col-md-2"><label>பெயர்:</label></div>
+          <div class="col-md-4">
+            <input class="form-control" formControlName="name" />
+          </div>
+
+          <div class="col-md-2"><label>நாள்:</label></div>
+          <div class="col-md-4">
+            <input type="date" class="form-control" formControlName="date" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-2"><label>அக்கவுண்ட் நம்பர்:</label></div>
+          <div class="col-md-4">
+            <input class="form-control" formControlName="accountNo" />
+          </div>
+
+          <div class="col-md-2"><label>பேங்க்:</label></div>
+          <div class="col-md-4">
+            <input class="form-control" formControlName="bank" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-2"><label>ஐஎப்எஸ்சி:</label></div>
+          <div class="col-md-4">
+            <input class="form-control" formControlName="ifsc" />
+          </div>
+
+          <div class="col-md-2"><label>பேங்க் ஊர்:</label></div>
+          <div class="col-md-4">
+            <input class="form-control" formControlName="bankcity" />
+          </div>
+        </div>
+<!-- 
+        <div class="row mb-3">
+          <div class="col-md-2"><label>இருப்பு:</label></div>
+          <div class="col-md-4">
+            <input type="number" class="form-control" formControlName="balance" />
+          </div>
+
+          <div class="col-md-2"><label>வகை:</label></div>
+          <div class="col-md-4 d-flex align-items-center gap-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" formControlName="type" value="Debit" id="leadger-debit" />
+              <label class="form-check-label" for="leadger-debit">Debit</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" formControlName="type" value="Credit" id="leadger-credit" />
+              <label class="form-check-label" for="leadger-credit">Credit</label>
+            </div>
+          </div>
+        </div> -->
+
+
+        <hr />
+
+        <div class="section-title">குடோன் விபரம்:</div>
+
+        <div class="row mb-3">
+          <label class="col-md-2">ஜிஎஸ்டி:</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" formControlName="gst" />
+          </div>
+
+          <label class="col-md-2">குடோன் ஊர்:</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" formControlName="gCity" />
+          </div>
+        </div>
+
+
+        <div class="d-flex justify-content-end mt-4">
+          <button type="submit" class="btn btn-success d-flex align-items-center gap-2" [disabled]="form.invalid || form.disabled">
+            <i class="bi bi-save"></i>
+            சேமி
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

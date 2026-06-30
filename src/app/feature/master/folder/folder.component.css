@@ -1,0 +1,194 @@
+/* ================= GLOBAL ================= */
+body {
+  background: #f4f6f9;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  color: #2c3e50;
+}
+
+/* ================= CARD ================= */
+.form-card {
+  border-radius: 6px;
+  border: 1px solid #dcdfe3;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= HEADER ================= */
+.card-header {
+  background: #0d6efd;
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ================= BODY ================= */
+.card-body {
+  padding: 20px;
+}
+
+/* ================= SECTION TITLE ================= */
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0d6efd;
+  margin: 20px 0 12px;
+  padding-left: 10px;
+  border-left: 3px solid #0d6efd;
+}
+
+/* ================= ROW ================= */
+.row {
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+/* ================= LABEL ================= */
+label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 0;
+}
+
+/* ================= INPUT ================= */
+.form-control {
+  height: 36px;
+  border: 1px solid #cfd6dd;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 13px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+/* Focus */
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 1px rgba(13, 110, 253, 0.2);
+  outline: none;
+}
+
+/* ================= INPUT GROUP ================= */
+.input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+/* Input inside group */
+.input-group .form-control {
+  border-radius: 4px 0 0 4px;
+  border-right: none;
+}
+
+/* Dropdown button */
+.input-group .btn {
+  height: 36px;
+  border: 1px solid #cfd6dd;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  background: #f8f9fa;
+  padding: 0 10px;
+}
+
+/* Hover */
+.input-group .btn:hover {
+  background: #e9ecef;
+  color: #2c3e50;
+}
+
+/* Focus group */
+.input-group:focus-within .form-control {
+  border-color: #0d6efd;
+}
+
+.input-group:focus-within .btn {
+  border-color: #0d6efd;
+}
+
+/* ================= DROPDOWN ================= */
+.list-group {
+  border: 1px solid #cfd6dd;
+  border-radius: 4px;
+  background: #fff;
+  margin-top: 2px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  z-index: 9999;
+}
+
+/* Dropdown item */
+.list-group-item {
+  font-size: 13px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+/* Hover effect */
+.list-group-item:hover {
+  background: #0d6efd;
+  color: #fff;
+}
+
+/* ================= HR ================= */
+hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 20px 0;
+}
+
+/* ================= BUTTON ================= */
+.btn {
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+  height: 36px;
+}
+
+/* Save button */
+.btn-success {
+  background: #198754;
+  border: none;
+}
+
+.btn-success:hover {
+  background: #157347;
+}
+
+/* Header button */
+.card-header .btn {
+  font-size: 12px;
+  padding: 4px 12px;
+  height: 30px;
+}
+
+/* ================= ALIGNMENT ================= */
+.col-md-2 {
+  display: flex;
+  align-items: center;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+
+  .col-md-2,
+  .col-md-4 {
+    width: 100%;
+  }
+
+  label {
+    margin-bottom: 4px;
+  }
+
+  .row {
+    margin-bottom: 14px;
+  }
+
+  .card-header {
+    text-align: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+}

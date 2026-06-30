@@ -1,0 +1,173 @@
+<div class="container mt-5 mb-5">
+  <div class="card shadow-lg form-card">
+
+    <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" appEnterTab>
+
+      <!-- 🔹 Header -->
+      <div class="card-header expense-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">செலவு எண்டரி</h5>
+
+        <!-- <div class="d-flex align-items-center gap-2">
+          <label class="mb-0 text-white">அ.நம்பர் :</label>
+          <input type="number" class="form-control form-control-sm" formControlName="addaiNo">
+        </div> -->
+
+        <button type="button" class="btn btn-light btn-sm d-flex align-items-center gap-1" (click)="enableEdit()"
+          [disabled]="!currentSupplier || isEditMode">
+          <i class="bi bi-pencil-square"></i>
+          திருத்து
+        </button>
+      </div>
+
+      <!-- 🔹 Body -->
+      <div class="card-body">
+
+        <!-- 🔸 Basic Details -->
+        <h6 class="section-title">அடிப்படை விபரம்</h6>
+
+        <div class="row mb-3">
+          <label class="col-md-2">பெயர்:</label>
+
+          <div class="col-md-4 position-relative">
+            <div class="input-group">
+
+              <!-- INPUT -->
+              <input type="text" class="form-control" formControlName="name" (focus)="openNameDropdown()"
+                (input)="onNameInput($event)"
+                [ngClass]="{'disabled-bg': isEditMode && expenseForm.get('name')?.disabled}" />
+
+              <!-- DROPDOWN ICON BUTTON -->
+              <button class="btn btn-outline-secondary" type="button" (click)="openNameDropdown()">
+                <i class="bi bi-caret-down-fill"></i>
+              </button>
+            </div>
+
+            <!-- DROPDOWN LIST -->
+            <ul *ngIf="showNameDropdown && filteredNames.length" class="list-group position-absolute w-100"
+              style="z-index: 1000; max-height: 150px; overflow-y: auto;">
+              <li class="list-group-item list-group-item-action" *ngFor="let n of filteredNames"
+                (click)="selectName(n)">
+                {{ n }}
+              </li>
+            </ul>
+          </div>
+          <label class="col-md-2">சப்ளையர்:</label>
+
+          <div class="col-md-4 position-relative">
+            <div class="input-group">
+
+              <!-- INPUT -->
+              <input type="text" class="form-control" formControlName="supplier" (focus)="openSupplierDropdown()"
+                (input)="onSupplierInput($event);"
+                [ngClass]="{'disabled-bg': isEditMode && expenseForm.get('supplier')?.disabled}" />
+
+              <!-- DROPDOWN BUTTON -->
+              <button class="btn btn-outline-secondary" type="button" (click)="openSupplierDropdown()">
+                <i class="bi bi-caret-down-fill"></i>
+              </button>
+
+            </div>
+
+            <!-- DROPDOWN LIST -->
+            <ul *ngIf="showDropdown && filteredSuppliers.length" class="list-group position-absolute w-100"
+              style="z-index:1000; max-height:150px; overflow-y:auto;">
+
+              <li class="list-group-item list-group-item-action" *ngFor="let s of filteredSuppliers"
+                (mousedown)="selectSupplier(s)">
+
+                {{ s }}
+
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+
+          <label class="col-sm-2 col-form-label">தேதி:</label>
+          <div class="col-sm-4">
+            <input type="date" class="form-control" formControlName="date">
+          </div>
+          <label class="col-sm-2 col-form-label">கொடுத்த ரூபாய்:</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control amount-expense" formControlName="amount">
+          </div>
+
+        </div>
+
+        <hr>
+
+        <!-- 🔸 Payment Details -->
+        <h6 class="section-title">கட்டணம் விபரம்</h6>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">வகை:</label>
+          <div class="col-sm-4 d-flex gap-4">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" value="செலவு" formControlName="type">
+              <label class="form-check-label">செலவு</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" value="பற்று" formControlName="type">
+              <label class="form-check-label">பற்று</label>
+            </div>
+          </div>
+          <label class="col-sm-2 col-form-label">கட்டணம்:</label>
+          <div class="col-sm-4 d-flex gap-4">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" value="கேஷ்" formControlName="paymentMethod">
+              <label class="form-check-label">கேஷ்</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" value="பாங்க்" formControlName="paymentMethod">
+              <label class="form-check-label">பாங்க்</label>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">விபரம்:</label>
+          <div class="col-sm-10">
+            <div class="input-group">
+              <input type="text" class="form-control" formControlName="description" />
+
+              <span class="input-group-text">
+                <i class="bi bi-caret-down-fill"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- 🔸 Reference -->
+        <h6 class="section-title">ரெஃபரன்ஸ்</h6>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">வா.வ.எண்:</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" formControlName="referenceNo">
+          </div>
+
+          <label class="col-sm-2 col-form-label">கேசியர் நம்பர்:</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" formControlName="cashierNo">
+          </div>
+        </div>
+
+        <!-- 🔹 Buttons -->
+        <div class="d-flex justify-content-end mt-4">
+          <button type="submit" class="btn btn-success d-flex align-items-center gap-2"
+            [disabled]="expenseForm.invalid || loading || (!isEditMode && currentSupplier)">
+            <i class="bi bi-save"></i>
+            {{ isEditMode ? 'புதுப்பி' : 'சேமி' }}
+          </button>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>

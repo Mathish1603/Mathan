@@ -1,0 +1,140 @@
+<nav class="navbar navbar-expand-lg navbar-custom">
+
+  <div class="container-fluid">
+
+    <!-- 🔹 BRAND -->
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/">
+      <div class="logo-circle">MSM</div>
+      <span class="brand-text">MSM-Billing</span>
+    </a>
+
+    <!-- 🔹 TOGGLE -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- 🔹 MENU -->
+    <div class="collapse navbar-collapse" id="navMenu">
+
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+
+        <!-- HOME -->
+        <li class="nav-item">
+          <a class="nav-link"
+             routerLink="/"
+             routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: true }">
+            <i class="bi bi-house-fill"></i>
+            ஹோம்
+          </a>
+        </li>
+
+        <!-- ENTRY -->
+        <li class="nav-item dropdown"
+        
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: false }">
+
+          <a class="nav-link" data-bs-toggle="dropdown">
+            <i class="bi bi-box-seam-fill"></i>
+            எண்டரி
+          </a>
+
+          <ul class="dropdown-menu dropdown-custom">
+            <li>
+              <a class="dropdown-item"
+                 routerLink="/Entry"
+                 routerLinkActive="active">
+                <i class="bi bi-cash-coin icon"></i> பர்சேஸ்
+              </a>
+            </li>
+            <!-- <li>
+              <a class="dropdown-item"
+                 routerLink="/EntryUpdate"
+                 routerLinkActive="active">
+                <i class="bi bi-pencil-square icon"></i> பர்சேஸ்-மாற்ற
+              </a>
+            </li> -->
+          </ul>
+        </li>
+
+        <!-- INCOME & EXPENSE -->
+        <li class="nav-item dropdown"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: false }">
+
+          <a class="nav-link" data-bs-toggle="dropdown">
+            <i class="bi bi-currency-rupee"></i>
+            வரவு & செலவு
+          </a>
+
+          <ul class="dropdown-menu dropdown-custom">
+            <li>
+              <a class="dropdown-item"
+                 routerLink="/Income"
+                 routerLinkActive="active">
+                <i class="bi bi-cash-coin icon"></i> வரவு - அட்வான்ஸ் எண்டரி 
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item"
+                 routerLink="/Expense"
+                 routerLinkActive="active">
+                <i class="bi bi-wallet2 icon"></i> செலவு - பற்று எண்டரி
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- MASTERS -->
+        <li class="nav-item dropdown"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: false }">
+
+          <a class="nav-link" data-bs-toggle="dropdown">
+            <i class="bi bi-gear-fill"></i>
+            மாஸ்டர்ஸ்
+          </a>
+
+          <ul class="dropdown-menu dropdown-custom">
+            <!-- <li>
+              <a class="dropdown-item"
+                 routerLink="/Newproduct"
+                 routerLinkActive="active">
+                <i class="bi bi-folder2-open icon"></i> புதிய-பொருள்
+              </a>
+            </li> -->
+            <li>
+              <a class="dropdown-item"
+                 routerLink="/Folder"
+                 routerLinkActive="active">
+                <i class="bi bi-box-seam icon"></i>போல்டர் 
+              </a>
+            </li>
+           
+            <li>
+              <a class="dropdown-item"
+                 routerLink="/Leadger"
+                 routerLinkActive="active">
+                <i class="bi bi-journal-text icon"></i> லெட்ஜெர்
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- REPORTS -->
+        <li class="nav-item">
+          <a class="nav-link"
+             routerLink="/Reports"
+             routerLinkActive="active">
+            <i class="bi bi-bar-chart-fill"></i>
+            ரிப்போர்ட்ஸ்
+          </a>
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+</nav>

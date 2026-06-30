@@ -1,0 +1,255 @@
+<div class="container mt-5 mb-5">
+  <div class="card shadow-lg form-card">
+
+    <form [formGroup]="incomeForm" (ngSubmit)="onSubmit()" appEnterTab>
+
+      <!-- 🔹 Header -->
+      <div class="card-header custom-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">வரவு எண்டரி</h5>
+
+        <button type="button" class="btn btn-light btn-sm d-flex align-items-center gap-1"
+          (click)="enableEdit()" [disabled]="!currentSupplier || isEditMode">
+
+          <i class="bi bi-pencil-square"></i>
+          திருத்து
+        </button>
+      </div>
+
+      <!-- 🔹 Body -->
+      <div class="card-body">
+
+        <!-- 🔸 Basic Details -->
+        <h6 class="section-title">அடிப்படை விபரம்</h6>
+
+        <div class="row mb-3">
+
+          <!-- NAME -->
+          <label class="col-md-2">பெயர்:</label>
+
+          <div class="col-md-4 position-relative">
+
+            <div class="input-group">
+
+              <input type="text"
+                class="form-control"
+                formControlName="name"
+                (focus)="showNameDropdown = true"
+                (input)="onNameInput($event)"
+                [ngClass]="{'disabled-bg': isEditMode && incomeForm.get('name')?.disabled}" />
+
+              <button class="btn btn-outline-secondary"
+                type="button"
+                (click)="showNameDropdown = !showNameDropdown">
+
+                <i class="bi bi-caret-down-fill"></i>
+              </button>
+
+            </div>
+
+            <!-- NAME DROPDOWN -->
+            <ul *ngIf="showNameDropdown && filteredNames.length"
+              class="list-group position-absolute w-100"
+              style="z-index:1000; max-height:150px; overflow-y:auto;">
+
+              <li class="list-group-item list-group-item-action"
+                *ngFor="let n of filteredNames"
+                (click)="selectName(n)">
+
+                {{ n }}
+
+              </li>
+            </ul>
+
+          </div>
+
+          <!-- SUPPLIER -->
+          <label class="col-md-2">சப்ளையர்:</label>
+
+          <div class="col-md-4 position-relative">
+
+            <div class="input-group">
+
+              <input type="text"
+                class="form-control"
+                formControlName="supplier"
+                (focus)="showDropdown = true"
+                (input)="onSupplierInput($event)"
+                [ngClass]="{'disabled-bg': isEditMode && incomeForm.get('supplier')?.disabled}" />
+
+              <button class="btn btn-outline-secondary"
+                type="button"
+                (click)="showDropdown = !showDropdown">
+
+                <i class="bi bi-caret-down-fill"></i>
+              </button>
+
+            </div>
+
+            <!-- SUPPLIER DROPDOWN -->
+            <ul *ngIf="showDropdown && filteredSuppliers.length"
+              class="list-group position-absolute w-100"
+              style="z-index:1000; max-height:150px; overflow-y:auto;">
+
+              <li class="list-group-item list-group-item-action"
+                *ngFor="let s of filteredSuppliers"
+                (mousedown)="selectSupplier(s)">
+
+                {{ s }}
+
+              </li>
+
+            </ul>
+
+          </div>
+
+        </div>
+
+        <!-- DATE + AMOUNT -->
+        <div class="row mb-3">
+
+          <label class="col-sm-2 col-form-label">தேதி:</label>
+
+          <div class="col-sm-4">
+            <input type="date"
+              class="form-control"
+              formControlName="date">
+          </div>
+
+          <label class="col-sm-2 col-form-label">கொடுத்த ரூபாய்:</label>
+
+          <div class="col-sm-4">
+            <input type="text"
+              class="form-control amount-input"
+              formControlName="amount">
+          </div>
+
+        </div>
+
+        <hr>
+
+        <!-- 🔸 Payment -->
+        <h6 class="section-title">கட்டணம் விபரம்</h6>
+
+        <div class="row mb-3">
+
+          <!-- TYPE -->
+          <label class="col-sm-2 col-form-label">வகை:</label>
+
+          <div class="col-sm-4 d-flex gap-4">
+
+            <div class="form-check">
+              <input class="form-check-input"
+                type="radio"
+                value="வரவு"
+                formControlName="type">
+
+              <label class="form-check-label">வரவு</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input"
+                type="radio"
+                value="அட்வான்ஸ்"
+                formControlName="type">
+
+              <label class="form-check-label">அட்வான்ஸ்</label>
+            </div>
+
+          </div>
+
+          <!-- PAYMENT -->
+          <label class="col-sm-2 col-form-label">கட்டணம்:</label>
+
+          <div class="col-sm-4 d-flex gap-4">
+
+            <div class="form-check">
+              <input class="form-check-input"
+                type="radio"
+                value="கேஷ்"
+                formControlName="paymentMethod">
+
+              <label class="form-check-label">கேஷ்</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input"
+                type="radio"
+                value="பாங்க்"
+                formControlName="paymentMethod">
+
+              <label class="form-check-label">பாங்க்</label>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="row mb-3">
+
+          <label class="col-sm-2 col-form-label">விபரம்:</label>
+
+          <div class="col-sm-10">
+
+            <div class="input-group">
+
+              <input type="text"
+                class="form-control"
+                formControlName="description" />
+
+              <span class="input-group-text">
+                <i class="bi bi-caret-down-fill"></i>
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <hr>
+
+        <!-- 🔸 Reference -->
+        <h6 class="section-title">ரெஃபரன்ஸ்</h6>
+
+        <div class="row mb-3">
+
+          <label class="col-sm-2 col-form-label">வா.வ.எண்:</label>
+
+          <div class="col-sm-4">
+            <input type="text"
+              class="form-control"
+              formControlName="referenceNo">
+          </div>
+
+          <label class="col-sm-2 col-form-label">கேசியர் நம்பர்:</label>
+
+          <div class="col-sm-4">
+            <input type="text"
+              class="form-control"
+              formControlName="cashierNo">
+          </div>
+
+        </div>
+
+        <!-- 🔹 Buttons -->
+        <div class="d-flex justify-content-end mt-4">
+
+          <button type="submit"
+            class="btn btn-success d-flex align-items-center gap-2"
+            [disabled]="incomeForm.invalid || loading">
+
+            <i class="bi bi-save"></i>
+
+            {{ isEditMode ? 'புதுப்பி' : 'சேமி' }}
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>

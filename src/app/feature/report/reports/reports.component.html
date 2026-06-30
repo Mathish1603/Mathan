@@ -1,0 +1,187 @@
+<!-- <div class="container-fluid mt-3"> -->
+<div class="container-fluid mt-3">
+  <!-- HEADER TABLE -->
+
+  <div class="d-flex align-items-center gap-2 justify-content-center flex-wrap mt-2 mb-4">
+
+    <span>சப்ளையர்:</span>
+
+    <div class="supplier-wrapper">
+
+      <div class="input-group input-group-sm">
+
+        <!-- INPUT -->
+        <input type="text" [(ngModel)]="searchSupplier" class="form-control" (focus)="showSupplierDropdown = true"
+          (input)="filterSuppliers()" autocomplete="off" />
+
+        <!-- BUTTON -->
+        <button class="btn btn-outline-secondary" type="button" (click)="showSupplierDropdown = !showSupplierDropdown">
+          <i class="bi bi-caret-down-fill"></i>
+        </button>
+
+      </div>
+
+      <!-- DROPDOWN -->
+      <ul *ngIf="showSupplierDropdown && filteredSuppliers.length" class="list-group supplier-dropdown">
+
+        <li class="list-group-item list-group-item-action" *ngFor="let s of filteredSuppliers"
+          (mousedown)="selectSearchSupplier(s)">
+
+          {{ s }}
+
+        </li>
+      </ul>
+
+    </div>
+
+    <!-- SEARCH BUTTON -->
+    <button class="btn btn-primary btn-sm" (click)="onSearchSupplier()" appEnterTab>
+      தேடு
+    </button>
+
+  </div>
+  <div id="print-section">
+    <div class="table-responsive">
+
+      <table class="table table-bordered text-center align-middle register-table">
+
+        <!-- TOP HEADER -->
+        <tr class="top-header">
+          <th colspan="3" class="no-right-border">லெட்ஜர்</th>
+          <th colspan="3">1. பர்ச்சஸிங் விபரம்</th>
+        </tr>
+
+        <!-- HEADER DATA ROWS (DISPLAY DATA) -->
+        <tr>
+          <th>பெயர்:</th>
+          <td>{{formData.personName}}</td>
+
+          <th>பேங்க்:</th>
+          <td>{{formData.bank}}</td>
+
+          <th>ஜிஎஸ்டி:</th>
+          <td>{{formData.gst}}</td>
+        </tr>
+
+        <tr>
+          <th>கம்பெனி:</th>
+          <td>{{formData.supplier}}</td>
+
+          <th>அக்கவுண்ட் நம்பர்:</th>
+          <td>{{formData.accountNo}}</td>
+
+          <th>குடோன் ஊர்:</th>
+          <td>{{formData.gCity}}</td>
+        </tr>
+
+        <tr>
+          <th>தெரு:</th>
+          <td>{{formData.address}}</td>
+
+          <th>ஐஎப்எஸ்சி:</th>
+          <td>{{formData.ifsc}}</td>
+
+          <th>மாநிலம்:</th>
+          <td>{{formData.state}}</td>
+        </tr>
+
+        <tr>
+          <th>ஊர்:</th>
+          <td>{{formData.pCity}}</td>
+
+
+          <th>பேங்க்.ஊர்:</th>
+          <td>{{formData.bankcity}}</td>
+
+          <th>போன் நம்பர்:</th>
+          <td>{{formData.phone}}</td>
+
+        </tr>
+
+      </table>
+    </div>
+
+    <!-- DATA TABLE FOR MULTIPLE ROWS -->
+    <div class="table-responsive mt-3">
+      <table class="table table-bordered table-sm text-center align-middle register-table-1">
+        <thead>
+          <tr>
+            <th>வ.எண்</th>
+            <th>தேதி</th>
+            <th>பொருள்</th>
+            <th>வா.வ.எண்</th>
+            <th>கே.நம்பர்</th>
+            <th>எண்ணம்</th>
+            <th>பொ.ரூபாய்</th>
+            <th>கொ.ரூபாய்</th>
+            <th>பற்று</th>
+            <th>இருப்பு</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows; let i=index">
+            <td>{{i+1}}</td>
+            <td>{{ row.date ? (row.date | date:'dd/MM/yyyy') : '' }}</td>
+            <td>{{row.product}}</td>
+            <td>{{row.referenceNo}}</td>
+            <td>{{row.cashierNo}}</td>
+            <td>{{row.quantity}}</td>
+            <td>{{ row.price ? (row.price | currency:'INR') : '' }}</td>
+            <td>{{ row.amount ? (row.amount | currency:'INR') : '' }}</td>
+            <td>{{ row.debit === 0 ? '-' : (row.debit | currency:'INR') }}</td>
+            <td>{{ row.balance === 0 ? '-' : (row.balance | currency:'INR') }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- BUTTONS -->
+  <div class="d-flex justify-content-end mt-3">
+
+    <div class="dropdown">
+
+      <!-- MAIN PRINT BUTTON -->
+      <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+        <i class="bi bi-printer me-2"></i>
+
+        Print
+
+      </button>
+
+      <!-- DROPDOWN MENU -->
+      <ul class="dropdown-menu dropdown-menu-end">
+
+        <!-- PDF -->
+        <li>
+
+          <button class="dropdown-item" (click)="downloadPDF()">
+
+            <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>
+
+            Download PDF
+
+          </button>
+
+        </li>
+
+        <!-- WORD -->
+        <li>
+
+          <button class="dropdown-item" (click)="downloadWord()">
+
+            <i class="bi bi-file-earmark-word me-2 text-primary"></i>
+
+            Download Word
+
+          </button>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,238 @@
+<form [formGroup]="folderForm" (ngSubmit)="onSubmit()" appEnterTab>
+
+  <div class="container mt-5 mb-5">
+    <div class="card shadow-lg form-card">
+
+      <!-- HEADER -->
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">போல்டர்</h5>
+
+        <button type="button" class="btn btn-light btn-sm" (click)="enableEdit()"
+          [disabled]="!currentFolderNo || isEditMode">
+
+          <i class="bi bi-pencil-square"></i>
+
+          திருத்து
+
+        </button>
+
+      </div>
+
+      <div class="card-body">
+
+        <!-- SECTION -->
+        <h6 class="section-title">போல்டர் விபரம்</h6>
+
+        <!-- ROW 1 -->
+        <div class="row mb-3">
+
+          <!-- FOLDER NAME -->
+          <label class="col-md-2">போல்டர் பெயர்:</label>
+
+          <div class="col-md-4 position-relative">
+
+            <div class="input-group">
+
+              <input type="text" class="form-control" formControlName="folderName"
+                (focus)="closeAllDropdowns(); showFolderNameDropdown = true" (input)="onFolderNameInput($event)" />
+
+              <button class="btn btn-outline-secondary" type="button"
+                (click)="closeAllDropdowns(); showFolderNameDropdown = !showFolderNameDropdown">
+
+                <i class="bi bi-caret-down-fill"></i>
+
+              </button>
+
+            </div>
+
+            <!-- DROPDOWN -->
+            <ul *ngIf="showFolderNameDropdown && filteredFolderNames.length" class="list-group position-absolute w-100"
+              style="z-index:1000; max-height:150px; overflow-y:auto;">
+
+              <li class="list-group-item list-group-item-action" *ngFor="let f of filteredFolderNames"
+                (mousedown)="selectFolderName(f)">
+
+                {{ f }}
+
+              </li>
+
+            </ul>
+
+          </div>
+
+          <!-- FOLDER NO -->
+          <label class="col-md-2">போல்டர் எண்:</label>
+
+          <div class="col-md-4 position-relative">
+
+            <div class="input-group">
+
+              <input type="text" class="form-control" formControlName="folderNo"
+                (focus)="closeAllDropdowns(); showFolderNoDropdown = true" (input)="onFolderNoInput($event)" />
+
+              <button class="btn btn-outline-secondary" type="button"
+                (click)="closeAllDropdowns(); showFolderNoDropdown = !showFolderNoDropdown">
+
+                <i class="bi bi-caret-down-fill"></i>
+
+              </button>
+
+            </div>
+
+            <!-- DROPDOWN -->
+            <ul *ngIf="showFolderNoDropdown && filteredFolderNos.length" class="list-group position-absolute w-100"
+              style="z-index:1000; max-height:150px; overflow-y:auto;">
+
+              <li class="list-group-item list-group-item-action" *ngFor="let f of filteredFolderNos"
+                (mousedown)="selectFolderNo(f)">
+
+                {{ f }}
+
+              </li>
+
+            </ul>
+
+          </div>
+
+        </div>
+
+        <!-- ROW 2 -->
+        <div class="row mb-3">
+
+          <!-- PRODUCT -->
+          <label class="col-md-2">பொருள்:</label>
+
+          <div class="col-md-4 position-relative">
+
+            <div class="input-group">
+
+              <input type="text" class="form-control" formControlName="product"
+                (focus)="closeAllDropdowns(); showProductDropdown = true" (input)="onProductInput($event)" />
+
+              <button class="btn btn-outline-secondary" type="button"
+                (click)="closeAllDropdowns(); showProductDropdown = !showProductDropdown">
+
+                <i class="bi bi-caret-down-fill"></i>
+
+              </button>
+
+            </div>
+
+            <!-- DROPDOWN -->
+            <ul *ngIf="showProductDropdown && filteredProducts.length" class="list-group position-absolute w-100"
+              style="z-index:1000; max-height:150px; overflow-y:auto;">
+
+              <li class="list-group-item list-group-item-action" *ngFor="let p of filteredProducts"
+                (mousedown)="selectProduct(p)">
+
+                {{ p }}
+
+              </li>
+
+            </ul>
+
+          </div>
+
+          <!-- PRODUCT DETAIL -->
+          <label class="col-md-2">பொருள் விபரம்:</label>
+
+          <div class="col-md-4 position-relative">
+
+            <div class="input-group">
+
+              <input type="text" class="form-control" formControlName="productDetail"
+                (focus)="closeAllDropdowns(); showProductDetailDropdown = true"
+                (input)="onProductDetailInput($event)" />
+
+              <button class="btn btn-outline-secondary" type="button"
+                (click)="closeAllDropdowns(); showProductDetailDropdown = !showProductDetailDropdown">
+
+                <i class="bi bi-caret-down-fill"></i>
+
+              </button>
+
+            </div>
+
+            <!-- DROPDOWN -->
+            <ul *ngIf="showProductDetailDropdown && filteredProductDetails.length"
+              class="list-group position-absolute w-100" style="z-index:1000; max-height:150px; overflow-y:auto;">
+
+              <li class="list-group-item list-group-item-action" *ngFor="let d of filteredProductDetails"
+                (mousedown)="selectProductDetail(d)">
+
+                {{ d }}
+
+              </li>
+
+            </ul>
+
+          </div>
+
+        </div>
+
+        <hr>
+
+        <!-- QUANTITY SECTION -->
+        <h6 class="section-title">அளவு / வரி விபரம்</h6>
+
+        <div class="row mb-3">
+
+          <label class="col-md-2">குறைந்த அளவு:</label>
+
+          <div class="col-md-4">
+
+            <input type="number" class="form-control" formControlName="minQty">
+
+          </div>
+
+          <label class="col-md-2">சேல்ஸ்:</label>
+
+          <div class="col-md-4">
+
+            <input type="text" class="form-control" formControlName="sales">
+
+          </div>
+
+        </div>
+
+        <div class="row mb-3">
+
+          <label class="col-md-2">HSN:</label>
+
+          <div class="col-md-4">
+
+            <input type="text" class="form-control" formControlName="hsn">
+
+          </div>
+
+          <label class="col-md-2">வரி (%):</label>
+
+          <div class="col-md-4">
+
+            <input type="number" class="form-control" formControlName="tax">
+
+          </div>
+
+        </div>
+
+        <!-- BUTTON -->
+        <div class="d-flex justify-content-end mt-4">
+
+          <button type="submit" class="btn btn-success d-flex align-items-center gap-2"
+            [disabled]="folderForm.invalid || (!isEditMode && currentFolderNo)">
+
+            <i class="bi" [ngClass]="isEditMode ? 'bi-pencil-square' : 'bi-save'">
+            </i>
+
+            {{ isEditMode ? 'புதுப்பிக்க' : 'சேமி' }}
+
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</form>
