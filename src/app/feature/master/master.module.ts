@@ -4,6 +4,7 @@ import { LeadgerComponent } from './leadger/leadger.component';
 import { FolderComponent } from './folder/folder.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EnterTabModule } from 'src/app/shared/enter-tab/enter-tab.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
@@ -16,7 +17,8 @@ import { EnterTabModule } from 'src/app/shared/enter-tab/enter-tab.module';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    EnterTabModule
+    EnterTabModule,
+    MatSnackBarModule
   ]
 })
 export class MasterModule { }

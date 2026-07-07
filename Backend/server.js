@@ -23,6 +23,7 @@ app.use('/api/purchase', require('./routes/purchaseupdate-route'));
 app.use('/api/purchase', require('./routes/purchase-route'));
 app.use('/api/folder', require('./routes/folder-route'));
 app.use('/api/report', require('./routes/report-routes'));
+app.use('/api/utils', require('./routes/utils-route'));
 
 // 404 handler for unmatched API routes
 app.use((req, res, next) => {

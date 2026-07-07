@@ -14,8 +14,21 @@
 
         <div class="row mb-3">
           <div class="col-md-2"><label>பெயர்:</label></div>
-          <div class="col-md-4">
-            <input class="form-control" formControlName="personName" />
+          <div class="col-md-4 position-relative">
+            <div class="input-group">
+              <input class="form-control" formControlName="personName" (input)="onPersonNameInput()"
+                (focus)="openPersonNameDropdown()" />
+              <button class="btn btn-outline-secondary" type="button" (click)="openPersonNameDropdown()">
+                <i class="bi bi-caret-down-fill"></i>
+              </button>
+            </div>
+            <ul *ngIf="showPersonNameDropdown && filteredPersonNames.length" class="list-group position-absolute w-100"
+              style="z-index:1000; max-height:150px; overflow-y:auto;">
+              <li class="list-group-item list-group-item-action" *ngFor="let p of filteredPersonNames"
+                (mousedown)="selectPersonName(p)">
+                {{ p }}
+              </li>
+            </ul>
           </div>
 
           <div class="col-md-2"><label>தெரு :</label></div>
@@ -33,11 +46,11 @@
             <div class="input-group">
 
               <!-- INPUT -->
-              <input type="text" class="form-control" formControlName="supplier" (focus)="showDropdown = true"
-                (input)="filterSuppliers()" />
+              <input type="text" class="form-control" formControlName="supplier" (focus)="openSupplierDropdown()"
+                (input)="onSupplierInput($event)" />
 
               <!-- DROPDOWN BUTTON -->
-              <button class="btn btn-outline-secondary" type="button" (click)="showDropdown = !showDropdown">
+              <button class="btn btn-outline-secondary" type="button" (click)="openSupplierDropdown()">
                 <i class="bi bi-caret-down-fill"></i>
               </button>
 
@@ -48,7 +61,7 @@
               style="z-index:1000; max-height:150px; overflow-y:auto;">
 
               <li class="list-group-item list-group-item-action" *ngFor="let s of filteredSuppliers"
-                (click)="selectSupplier(s)">
+                (mousedown)="selectSupplier(s)">
                 {{ s }}
               </li>
 

@@ -1,6 +1,8 @@
 import { Component, HostListener, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FolderService } from 'src/app/core/services/folder/folder.service';
+import { UtilsService } from 'src/app/core/services/utils/utils.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -45,7 +47,9 @@ export class FolderComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private folderService: FolderService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private utilsService: UtilsService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -156,26 +160,50 @@ export class FolderComponent implements OnInit {
   // =========================
 
   loadDropdowns() {
-
-    this.folderNames =
-      JSON.parse(localStorage.getItem('folderNames') || '[]');
-
-    this.folderNos =
-      JSON.parse(localStorage.getItem('folderNos') || '[]');
-
-    this.products =
-      JSON.parse(localStorage.getItem('products') || '[]');
-
-    this.productDetailsList =
-      JSON.parse(localStorage.getItem('productDetails') || '[]');
-
-    this.filteredFolderNames = [...this.folderNames];
-
-    this.filteredFolderNos = [...this.folderNos];
-
-    this.filteredProducts = [...this.products];
-
-    this.filteredProductDetails = [...this.productDetailsList];
+    this.utilsService.getDistinct('folder', 'folderName').subscribe({
+      next: (data) => {
+        this.folderNames = data;
+        this.filteredFolderNames = [...data];
+        localStorage.setItem('folderNames', JSON.stringify(data));
+      },
+      error: () => {
+        this.folderNames = JSON.parse(localStorage.getItem('folderNames') || '[]');
+        this.filteredFolderNames = [...this.folderNames];
+      }
+    });
+    this.utilsService.getDistinct('folder', 'folderNo').subscribe({
+      next: (data) => {
+        this.folderNos = data;
+        this.filteredFolderNos = [...data];
+        localStorage.setItem('folderNos', JSON.stringify(data));
+      },
+      error: () => {
+        this.folderNos = JSON.parse(localStorage.getItem('folderNos') || '[]');
+        this.filteredFolderNos = [...this.folderNos];
+      }
+    });
+    this.utilsService.getDistinct('folder', 'product').subscribe({
+      next: (data) => {
+        this.products = data;
+        this.filteredProducts = [...data];
+        localStorage.setItem('products', JSON.stringify(data));
+      },
+      error: () => {
+        this.products = JSON.parse(localStorage.getItem('products') || '[]');
+        this.filteredProducts = [...this.products];
+      }
+    });
+    this.utilsService.getDistinct('folder', 'productDetail').subscribe({
+      next: (data) => {
+        this.productDetailsList = data;
+        this.filteredProductDetails = [...data];
+        localStorage.setItem('productDetails', JSON.stringify(data));
+      },
+      error: () => {
+        this.productDetailsList = JSON.parse(localStorage.getItem('productDetails') || '[]');
+        this.filteredProductDetails = [...this.productDetailsList];
+      }
+    });
   }
 
   // =========================
@@ -474,14 +502,14 @@ export class FolderComponent implements OnInit {
 
             this.saveDropdownValues(data);
 
-            alert('Updated successfully');
+            this.snackBar.open('Updated successfully', '✕', { duration: 3000, verticalPosition: 'top', panelClass: ['snackbar-success'] });
 
             this.fetchFolderByNo(this.currentFolderNo);
           },
 
           error: () => {
 
-            alert('Update failed');
+            this.snackBar.open('Update failed', '✕', { duration: 3000, verticalPosition: 'top', panelClass: ['snackbar-error'] });
           }
         });
     }
@@ -497,14 +525,14 @@ export class FolderComponent implements OnInit {
 
             this.saveDropdownValues(data);
 
-            alert('Saved successfully');
+            this.snackBar.open('Saved successfully', '✕', { duration: 3000, verticalPosition: 'top', panelClass: ['snackbar-success'] });
 
             this.resetForm();
           },
 
           error: () => {
 
-            alert('Save failed');
+            this.snackBar.open('Save failed', '✕', { duration: 3000, verticalPosition: 'top', panelClass: ['snackbar-error'] });
           }
         });
     }

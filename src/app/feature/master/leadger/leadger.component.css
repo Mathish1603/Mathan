@@ -126,6 +126,17 @@ label {
   color: #2c3e50;
 }
 
+/* Focus effect for whole group */
+.input-group:focus-within .form-control {
+  border-color: #0d6efd;
+}
+
+.input-group:focus-within .btn,
+.input-group:focus-within .input-group-text {
+  border-color: #0d6efd;
+}
+
+
 
 /* ================= RADIO ================= */
 .form-check-input {

@@ -112,10 +112,12 @@
             <th>வா.வ.எண்</th>
             <th>கே.நம்பர்</th>
             <th>எண்ணம்</th>
-            <th>பொ.ரூபாய்</th>
-            <th>கொ.ரூபாய்</th>
+            <th>பொ.ரூ</th>
+            <th>மொ.ரூ</th>
+            <th>கொ.ரூ</th>
             <th>பற்று</th>
             <th>இருப்பு</th>
+            <!-- ரூபாய் -->
           </tr>
         </thead>
         <tbody>
@@ -127,7 +129,8 @@
             <td>{{row.cashierNo}}</td>
             <td>{{row.quantity}}</td>
             <td>{{ row.price ? (row.price | currency:'INR') : '' }}</td>
-            <td>{{ row.amount ? (row.amount | currency:'INR') : '' }}</td>
+            <td>{{ row.totalprice ? (row.totalprice | currency:'INR'):''}}</td>
+            <td>{{ row.amount ? (row.amount | currency:'INR') : '-' }}</td>
             <td>{{ row.debit === 0 ? '-' : (row.debit | currency:'INR') }}</td>
             <td>{{ row.balance === 0 ? '-' : (row.balance | currency:'INR') }}</td>
           </tr>

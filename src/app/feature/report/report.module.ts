@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReportsComponent } from './reports/reports.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EnterTabModule } from 'src/app/shared/enter-tab/enter-tab.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { EnterTabModule } from 'src/app/shared/enter-tab/enter-tab.module';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    EnterTabModule
+    EnterTabModule,
+    MatSnackBarModule
   ]
 })
 export class ReportModule { }

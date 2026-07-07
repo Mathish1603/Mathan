@@ -1,1 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+.snackbar-success {
+  --mdc-snackbar-container-color: #2e7d32;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #ffffff;
+}
+.snackbar-warning {
+  --mdc-snackbar-container-color: #f9a825;
+  --mdc-snackbar-supporting-text-color: #000000;
+  --mat-snack-bar-button-color: #000000;
+}
+.snackbar-error {
+  --mdc-snackbar-container-color: #c62828;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #ffffff;
+}
+.snackbar-info {
+  --mdc-snackbar-container-color: #1976d2;
+  --mdc-snackbar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #ffffff;
+}
+
+.mat-mdc-snack-bar-container {
+  position: relative;
+  overflow: hidden;
+}
+.mat-mdc-snack-bar-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.5);
+  animation: snackbar-progress 3s linear forwards;
+}
+@keyframes snackbar-progress {
+  from { width: 100%; }
+  to { width: 0%; }
+}

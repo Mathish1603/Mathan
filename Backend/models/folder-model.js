@@ -6,7 +6,7 @@ const folderSchema = new mongoose.Schema({
   folderName: { type: String, required: true },
   folderNo: { type: String, required: true, unique:true  },
   minQty: { type: Number, required: true },
-  hsn: { type: Number, required: true },
+  hsn: { type:String, required: true },
   sales: { type: String, required: true },
   tax: { type: Number, required: true }
 }, { timestamps: true });

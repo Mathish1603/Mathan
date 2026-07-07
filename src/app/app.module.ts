@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,7 +25,8 @@ import { EnterTabDirective } from './core/dirctive/enter-tab.directive';
     ReactiveFormsModule,
     MasterModule,IncomeModule,
     EntryModule,
-    ReportModule,HttpClientModule
+    ReportModule,HttpClientModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

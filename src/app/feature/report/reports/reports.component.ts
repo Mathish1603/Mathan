@@ -1,6 +1,8 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, Inject } from '@angular/core';
 import { Entry } from 'src/app/shared/models/billing';
 import { ReportService } from 'src/app/core/services/report/report.service';
+import { UtilsService } from 'src/app/core/services/utils/utils.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -15,7 +17,7 @@ import { saveAs } from 'file-saver';
 })
 export class ReportsComponent implements OnInit {
 
-  constructor(private reportService: ReportService) { }
+  constructor(private reportService: ReportService, private utilsService: UtilsService, private snackBar: MatSnackBar) { }
 
   searchSupplier: string = '';
   showSupplierDropdown = false;
@@ -57,6 +59,7 @@ export class ReportsComponent implements OnInit {
       cashierNo: '',
       quantity: 0,
       price: 0,
+      totalprice: 0,
       amount: 0,
       debit: 0,
       balance: 0
@@ -65,68 +68,61 @@ export class ReportsComponent implements OnInit {
 
   calculateLedger() {
 
-    let runningBalance = this.rows.length > 0
-      ? Number(this.rows[0].amount) || 0
-      : 0;
-
-    let runningDebit = 0;  
-
-    this.rows = this.rows.map((row, index) => {
-
-      const quantity = Number(row.quantity) || 0;
-
-      const singlePrice = Number(row.price) || 0;
-
-      const totalProductPrice = quantity * singlePrice;
-
-      let debit = 0;
-      let balance = 0;
-
-      if (runningBalance >= totalProductPrice) {
-
-        runningBalance -= totalProductPrice;
-
-        balance = runningBalance;
-
-        debit = runningDebit;
-
-      } else {
-
-        const currentDebit = totalProductPrice - runningBalance;
-
-        runningDebit += currentDebit;
-
-        debit = runningDebit;
-
-        runningBalance = 0;
-
-        balance = 0;
-
+    const groups = new Map<number, { totalProductPrice: number }>();
+    this.rows.forEach((row) => {
+      const key = row._expIdx ?? -1;
+      if (!groups.has(key)) {
+        groups.set(key, { totalProductPrice: 0 });
       }
-
-      return {
-
-        ...row,
-
-        sno: index + 1,
-
-        price: singlePrice,
-
-        amount: Number(row.amount) || 0,
-
-        debit,
-        balance
-
-      };
-
+      const g = groups.get(key)!;
+      g.totalProductPrice += (Number(row.quantity) || 0) * (Number(row.price) || 0);
     });
 
+    let runningBalance = 0;
+    this.rows = this.rows.map((row, index) => {
+      const key = row._expIdx ?? -1;
+      const g = groups.get(key);
+      const totalProductPrice = (Number(row.quantity) || 0) * (Number(row.price) || 0);
+      const share = g && g.totalProductPrice > 0
+        ? (Number(row.amount) || 0) * (totalProductPrice / g.totalProductPrice)
+        : 0;
+      const diff = share - totalProductPrice;
+      runningBalance += diff;
+
+      return {
+        ...row,
+        sno: index + 1,
+        amount: share,
+        debit: runningBalance < 0 ? Math.abs(runningBalance) : 0,
+        balance: runningBalance > 0 ? runningBalance : 0
+      };
+    });
+  }
+
+  private formatDate(date: any): string {
+    try {
+      if (!date) return '';
+      const d = new Date(date);
+      if (isNaN(d.getTime())) return '';
+      return d.toISOString().split('T')[0];
+    } catch {
+      return '';
+    }
+  }
+
+  private showSnackBar(message: string, type: 'success' | 'warning' | 'error' | 'info' = 'error') {
+    const panelClass = type === 'success' ? 'snackbar-success' : type === 'warning' ? 'snackbar-warning' : type === 'info' ? 'snackbar-info' : 'snackbar-error';
+    this.snackBar.open(message, '✕', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: [panelClass]
+    });
   }
 
   onSearchSupplier() {
 
     if (!this.searchSupplier.trim()) {
-      alert("Enter Supplier");
+      this.showSnackBar('Enter Supplier', 'warning');
       return;
     }
 
@@ -140,11 +136,16 @@ export class ReportsComponent implements OnInit {
           const purchases = res.purchase || [];
           const expenses = res.expense || [];
 
-          if (!leadger) {
+          if (!leadger || purchases.length === 0 || expenses.length === 0) {
             this.isNotFound = true;
             this.resetForm();
+            this.showSnackBar('Data not found', 'error');
             return;
           }
+
+          const sortedExpenses = [...expenses].sort((a, b) =>
+            (new Date(a.date).getTime() || 0) - (new Date(b.date).getTime() || 0)
+          );
 
           const expenseData = expenses.length > 0
             ? expenses[expenses.length - 1]
@@ -168,28 +169,41 @@ export class ReportsComponent implements OnInit {
             cashierNo: expenseData?.cashierNo || ''
           };
 
-          if (purchases.length > 0) {
+          const sortedPurchases = [...purchases].sort((a, b) =>
+            (new Date(a.purchaseDate).getTime() || 0) - (new Date(b.purchaseDate).getTime() || 0)
+          );
 
-            this.rows = purchases.map((p: any, index: number) => {
+          if (sortedPurchases.length > 0) {
+
+            this.rows = sortedPurchases.map((p: any, index: number) => {
+
+              let matchedExpense: any = null;
+              let expenseIdx = -1;
+              if (sortedExpenses.length > 0) {
+                const groupSize = Math.ceil(sortedPurchases.length / sortedExpenses.length);
+                expenseIdx = Math.min(Math.floor(index / groupSize), sortedExpenses.length - 1);
+                matchedExpense = sortedExpenses[expenseIdx];
+              }
 
               return {
 
                 sno: index + 1,
 
-                date: expenseData?.date
-                  ? new Date(expenseData.date).toISOString().split('T')[0]
-                  : '',
+                date: this.formatDate(matchedExpense?.date),
 
                 product: p.product || p.itemName || '',
 
-                referenceNo: expenseData?.referenceNo || '',
-                cashierNo: expenseData?.cashierNo || '',
+                referenceNo: matchedExpense?.referenceNo || '',
+                cashierNo: matchedExpense?.cashierNo || '',
 
                 quantity: p.quantity || 0,
 
                 price: p.price || p.rate || 0,
 
-                amount: expenseData?.amount || 0,
+                totalprice: (p.quantity || 0) * (p.price || p.rate || 0),
+
+                amount: matchedExpense?.amount || 0,
+                _expIdx: expenseIdx,
 
                 debit: 0,
                 balance: 0
@@ -202,14 +216,13 @@ export class ReportsComponent implements OnInit {
 
             this.rows = [{
               sno: 1,
-              date: expenseData?.date
-                ? new Date(expenseData.date).toISOString().split('T')[0]
-                : '',
+              date: this.formatDate(expenseData?.date),
               product: '',
               referenceNo: expenseData?.referenceNo || '',
               cashierNo: expenseData?.cashierNo || '',
               quantity: 0,
               price: 0,
+              totalprice:0,
               amount: 0,
               debit: 0,
               balance: 0
@@ -228,18 +241,24 @@ export class ReportsComponent implements OnInit {
           this.isNotFound = true;
           this.resetForm();
 
-          alert("Data not found");
+          this.showSnackBar('Data not found', 'error');
 
         }
       });
   }
 
   getSuppliers() {
-
-    this.suppliers = JSON.parse(localStorage.getItem('suppliers') || '[]');
-
-    this.filteredSuppliers = [...this.suppliers];
-
+    this.utilsService.getDistinct('purchase', 'supplier').subscribe({
+      next: (data) => {
+        this.suppliers = data;
+        this.filteredSuppliers = [...data];
+        localStorage.setItem('suppliers', JSON.stringify(data));
+      },
+      error: () => {
+        this.suppliers = JSON.parse(localStorage.getItem('suppliers') || '[]');
+        this.filteredSuppliers = [...this.suppliers];
+      }
+    });
   }
 
   filterSuppliers() {
@@ -314,7 +333,7 @@ downloadPDF() {
   const originalData = document.getElementById('print-section');
 
   if (!originalData) {
-    alert('Print section not found');
+    this.showSnackBar('Print section not found', 'warning');
     return;
   }
 
@@ -416,7 +435,7 @@ downloadPDF() {
         document.body.removeChild(clonedData);
       }
 
-      alert('PDF generation failed');
+      this.showSnackBar('PDF generation failed', 'error');
 
     });
 }
@@ -657,9 +676,17 @@ downloadWord() {
 
           createCell(row.quantity?.toString() || '0', false, 8),
 
-          createCell(this.formatCurrency(row.price), false, 11),
+          createCell(this.formatCurrency(row.price), false, 10),
 
-          createCell(this.formatCurrency(row.amount), false, 11),
+          createCell(this.formatCurrency(row.totalprice), false, 10),
+
+          createCell(
+            row.amount === 0
+              ? '-'
+              : this.formatCurrency(row.amount),
+            false,
+            10
+          ),
 
           createCell(
             row.debit === 0
@@ -691,8 +718,9 @@ downloadWord() {
         createHeaderCell('வா.வ.எண்', 10),
         createHeaderCell('கே.நம்பர்', 10),
         createHeaderCell('எண்ணம்', 8),
-        createHeaderCell('பொ.ரூபாய்', 11),
-        createHeaderCell('கொ.ரூபாய்', 11),
+        createHeaderCell('பொ.ரூபாய்', 10),
+        createHeaderCell('மொ.ரூபாய்', 10),
+        createHeaderCell('கொ.ரூபாய்', 10),
         createHeaderCell('பற்று', 10),
         createHeaderCell('இருப்பு', 10)
 
@@ -746,13 +774,13 @@ downloadWord() {
       })
       .catch((err) => {
         console.error(err);
-        alert('Word document generation failed');
+        this.showSnackBar('Word document generation failed', 'error');
       });
 
   } catch (error) {
 
     console.error(error);
-    alert('Failed to generate Word document');
+    this.showSnackBar('Failed to generate Word document', 'error');
 
   }
 }

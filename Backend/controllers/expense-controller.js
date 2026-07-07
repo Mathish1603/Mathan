@@ -39,12 +39,63 @@ exports.getExpenseBySupplier = async (req, res) => {
   }
 };
 
+// GET by referenceNo
+exports.getExpenseByReferenceNo = async (req, res) => {
+  try {
+    const { referenceNo } = req.query;
+
+    const expenses = await Expense.find({
+      referenceNo: { $regex: escapeRegex(referenceNo), $options: 'i' }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: expenses
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 exports.updateExpense = async (req, res) => {
   try {
     const { supplier } = req.params;
 
     const updatedExpense = await Expense.findOneAndUpdate(
       { supplier: { $regex: `^${escapeRegex(supplier)}$`, $options: 'i' } },
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedExpense) {
+      return res.status(404).json({
+        success: false,
+        message: 'Expense not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Updated successfully',
+      data: updatedExpense
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+exports.updateExpenseByReferenceNo = async (req, res) => {
+  try {
+    const { referenceNo } = req.params;
+
+    const updatedExpense = await Expense.findOneAndUpdate(
+      { referenceNo: { $regex: `^${escapeRegex(referenceNo)}$`, $options: 'i' } },
       req.body,
       { new: true }
     );

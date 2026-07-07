@@ -4,12 +4,14 @@ export interface Entry {
   product: string;    // பொருள்
   referenceNo: string;      // வா.வ
   cashierNo: string;       // கே.ந
-  quantity: number;       // எண்
-  price: number;     // பொ.ரூ
-  amount: number;     // கொ.ரூ
+  quantity: number;       // எண்ணம்
+  price: number;     // பொ.ரூபாய்
+  totalprice: number; // மொ.ரூபாய்
+  amount: number;     // கொ.ரூபாய்
   debit: number;    // பற்று
   balance:number;   // இருப்பு
   type?: string;
+  _expIdx?: number;
 }
 
 export interface Register {

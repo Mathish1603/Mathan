@@ -2,6 +2,8 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PurchaseService } from 'src/app/core/services/purchase/purchase.service';
 import { FolderService } from 'src/app/core/services/folder/folder.service';
+import { UtilsService } from 'src/app/core/services/utils/utils.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -49,7 +51,9 @@ export class EntryComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private purchaseService: PurchaseService,
-    private folderService: FolderService
+    private folderService: FolderService,
+    private utilsService: UtilsService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -120,8 +124,17 @@ export class EntryComponent implements OnInit {
   }
   // ================= SUPPLIER =================
   getSuppliers() {
-    this.suppliers = JSON.parse(localStorage.getItem('suppliers') || '[]');
-    this.filteredSuppliers = [...this.suppliers];
+    this.utilsService.getDistinct('purchase', 'supplier').subscribe({
+      next: (data) => {
+        this.suppliers = data;
+        this.filteredSuppliers = [...data];
+        localStorage.setItem('suppliers', JSON.stringify(data));
+      },
+      error: () => {
+        this.suppliers = JSON.parse(localStorage.getItem('suppliers') || '[]');
+        this.filteredSuppliers = [...this.suppliers];
+      }
+    });
   }
 
   filterSuppliers() {
@@ -139,8 +152,17 @@ export class EntryComponent implements OnInit {
 
   // ================= FOLDER =================
   getFolders() {
-    this.folders = JSON.parse(localStorage.getItem('folders') || '[]');
-    this.filteredFolders = [...this.folders];
+    this.utilsService.getDistinct('folder', 'folderName').subscribe({
+      next: (data) => {
+        this.folders = data;
+        this.filteredFolders = [...data];
+        localStorage.setItem('folders', JSON.stringify(data));
+      },
+      error: () => {
+        this.folders = JSON.parse(localStorage.getItem('folders') || '[]');
+        this.filteredFolders = [...this.folders];
+      }
+    });
   }
 
   filterFolders() {
@@ -158,8 +180,17 @@ export class EntryComponent implements OnInit {
 
   // ================= FOLDER NO =================
   getFolderNos() {
-    this.folderNos = JSON.parse(localStorage.getItem('folderNos') || '[]');
-    this.filteredFolderNos = [...this.folderNos];
+    this.utilsService.getDistinct('folder', 'folderNo').subscribe({
+      next: (data) => {
+        this.folderNos = data;
+        this.filteredFolderNos = [...data];
+        localStorage.setItem('folderNos', JSON.stringify(data));
+      },
+      error: () => {
+        this.folderNos = JSON.parse(localStorage.getItem('folderNos') || '[]');
+        this.filteredFolderNos = [...this.folderNos];
+      }
+    });
   }
 
   filterFolderNos() {
@@ -183,8 +214,17 @@ export class EntryComponent implements OnInit {
 
   // ================= PRODUCT =================
   getProducts() {
-    this.products = JSON.parse(localStorage.getItem('products') || '[]');
-    this.filteredProducts = [...this.products];
+    this.utilsService.getDistinct('purchase', 'product').subscribe({
+      next: (data) => {
+        this.products = data;
+        this.filteredProducts = [...data];
+        localStorage.setItem('products', JSON.stringify(data));
+      },
+      error: () => {
+        this.products = JSON.parse(localStorage.getItem('products') || '[]');
+        this.filteredProducts = [...this.products];
+      }
+    });
   }
 
   filterProducts() {
@@ -208,8 +248,17 @@ export class EntryComponent implements OnInit {
 
   // ================= PRODUCT DESC =================
   getProductDescs() {
-    this.productDescs = JSON.parse(localStorage.getItem('productDescs') || '[]');
-    this.filteredProductDesc = [...this.productDescs];
+    this.utilsService.getDistinct('purchase', 'productDesc').subscribe({
+      next: (data) => {
+        this.productDescs = data;
+        this.filteredProductDesc = [...data];
+        localStorage.setItem('productDescs', JSON.stringify(data));
+      },
+      error: () => {
+        this.productDescs = JSON.parse(localStorage.getItem('productDescs') || '[]');
+        this.filteredProductDesc = [...this.productDescs];
+      }
+    });
   }
 
   filterProductDesc() {
@@ -316,7 +365,7 @@ export class EntryComponent implements OnInit {
     if (this.isEditMode && this.currentProduct) {
       this.purchaseService.updateByProduct(this.currentProduct, data).subscribe({
         next: () => {
-          alert('Updated successfully');
+          this.snackBar.open('Updated successfully', '✕', { duration: 3000, verticalPosition: 'top', panelClass: ['snackbar-success'] });
           this.isEditMode = false;
           this.purchaseForm.disable();
         }
@@ -331,7 +380,7 @@ export class EntryComponent implements OnInit {
 
       this.purchaseService.createPurchase(data).subscribe({
         next: () => {
-          alert('Saved successfully');
+          this.snackBar.open('Saved successfully', '✕', { duration: 3000, verticalPosition: 'top', panelClass: ['snackbar-success'] });
           this.purchaseForm.reset();
           // this.purchaseForm.disable();
           this.reloadDropdowns();

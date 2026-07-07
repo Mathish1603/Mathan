@@ -1,6 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IncomeService } from 'src/app/core/services/income/income.service';
+import { UtilsService } from 'src/app/core/services/utils/utils.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -32,7 +34,9 @@ export class IncomeComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private incomeService: IncomeService
+    private incomeService: IncomeService,
+    private utilsService: UtilsService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -68,8 +72,17 @@ export class IncomeComponent implements OnInit {
   // ================= SUPPLIER =================
 
   loadSuppliers() {
-    this.suppliers = JSON.parse(localStorage.getItem('incomeSuppliers') || '[]');
-    this.filteredSuppliers = [...this.suppliers];
+    this.utilsService.getDistinct('income', 'supplier').subscribe({
+      next: (data) => {
+        this.suppliers = data;
+        this.filteredSuppliers = [...data];
+        localStorage.setItem('incomeSuppliers', JSON.stringify(data));
+      },
+      error: () => {
+        this.suppliers = JSON.parse(localStorage.getItem('incomeSuppliers') || '[]');
+        this.filteredSuppliers = [...this.suppliers];
+      }
+    });
   }
 
   onSupplierInput(event: any) {
@@ -152,8 +165,17 @@ export class IncomeComponent implements OnInit {
   // ================= NAME =================
 
   loadNames() {
-    this.names = JSON.parse(localStorage.getItem('incomeNames') || '[]');
-    this.filteredNames = [...this.names];
+    this.utilsService.getDistinct('income', 'name').subscribe({
+      next: (data) => {
+        this.names = data;
+        this.filteredNames = [...data];
+        localStorage.setItem('incomeNames', JSON.stringify(data));
+      },
+      error: () => {
+        this.names = JSON.parse(localStorage.getItem('incomeNames') || '[]');
+        this.filteredNames = [...this.names];
+      }
+    });
   }
 
   onNameInput(event: any) {
@@ -223,10 +245,10 @@ export class IncomeComponent implements OnInit {
       this.incomeService.updateIncome(this.currentSupplier, data)
         .subscribe({
           next: () => {
-            alert('Updated successfully');
+            this.snackBar.open('Updated successfully', '✕', { duration: 3000, verticalPosition: 'top', panelClass: ['snackbar-success'] });
             this.resetForm();
           },
-          error: () => alert('Update failed')
+          error: () => this.snackBar.open('Update failed', '✕', { duration: 3000, verticalPosition: 'top', panelClass: ['snackbar-error'] })
         });
 
     } else {
@@ -238,10 +260,10 @@ export class IncomeComponent implements OnInit {
       this.incomeService.addIncome(data)
         .subscribe({
           next: () => {
-            alert('Saved successfully');
+            this.snackBar.open('Saved successfully', '✕', { duration: 3000, verticalPosition: 'top', panelClass: ['snackbar-success'] });
             this.resetForm();
           },
-          error: () => alert('Save failed')
+          error: () => this.snackBar.open('Save failed', '✕', { duration: 3000, verticalPosition: 'top', panelClass: ['snackbar-error'] })
         });
     }
   }

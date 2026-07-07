@@ -27,7 +27,7 @@ export class ExpenseService {
     return this.http.post(`${this.apiUrl}/add`, data);
   }
 
-  // GET
+  // GET by supplier
   getBySupplier(supplier: string): Observable<any> {
 
     const encoded = encodeURIComponent(supplier);
@@ -37,7 +37,28 @@ export class ExpenseService {
     );
   }
 
-  // UPDATE
+  // GET by referenceNo
+  getByReferenceNo(refNo: string): Observable<any> {
+
+    const encoded = encodeURIComponent(refNo);
+
+    return this.http.get(
+      `${this.apiUrl}/search/ref?referenceNo=${encoded}`
+    );
+  }
+
+  // UPDATE by referenceNo
+  updateExpenseByReferenceNo(refNo: string, data: Expense): Observable<any> {
+
+    const encoded = encodeURIComponent(refNo);
+
+    return this.http.put(
+      `${this.apiUrl}/update/ref/${encoded}`,
+      data
+    );
+  }
+
+  // UPDATE by supplier
   updateExpense(supplier: string, data: Expense): Observable<any> {
 
     const encoded = encodeURIComponent(supplier);

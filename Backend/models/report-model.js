@@ -8,6 +8,7 @@ const rowSchema = new mongoose.Schema({
   cashierNo: String,
   quantity: Number,
   price: Number,
+  totalprice: Number,
   amount: Number,
   debit: Number,
   balance: Number
